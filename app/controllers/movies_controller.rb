@@ -43,7 +43,7 @@ class MoviesController < ApplicationController
             end
         end
 
-        session[:sort] = @sorting
+        session[:sort]    = @sorting
         session[:ratings] = @ratings
     end
 
