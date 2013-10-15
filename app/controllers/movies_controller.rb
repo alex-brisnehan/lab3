@@ -1,3 +1,5 @@
+# Edited by: Alex Brisnehan
+
 class MoviesController < ApplicationController
 
     def initialize
@@ -14,6 +16,8 @@ class MoviesController < ApplicationController
     def index
         redirect = false
 
+	# Figure out which sort is occuring, if any
+
         if params[:sort]
             @sorting = params[:sort]
         elsif session[:sort]
@@ -21,12 +25,17 @@ class MoviesController < ApplicationController
             redirect = true
         end
 
+	# Figure out which ratings are needed, if any
+
         if params[:ratings]
             @ratings = params[:ratings]
         elsif session[:ratings]
             @ratings = session[:ratings]
             redirect = true
-        else
+        
+	# Grab rating
+
+	else
             @all_ratings.each do |rat|
                 (@ratings ||= { })[rat] = 1
             end
@@ -36,6 +45,8 @@ class MoviesController < ApplicationController
         if redirect
             redirect_to movies_path(:sort => @sorting, :ratings => @ratings)
         end
+
+	# Filter by rating and sort
 
         Movie.find(:all, :order => @sorting ? @sorting : :id).each do |mv|
             if @ratings.keys.include? mv[:rating]
